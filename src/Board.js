@@ -1,6 +1,7 @@
 import React from 'react';
 
-import List from './List';
+import Composer from './Composer';
+import ListContainer from './ListContainer';
 
 const styles = {
   board: {
@@ -20,12 +21,20 @@ const styles = {
 };
 
 export default class Board extends React.Component {
+  handleAdd = (name) => {
+    this.props.addList(this.props.board.id, name);
+  }
+
   render() {
-    const {board} = this.props;
-    const children = board.lists.map(list => <List key={list.id} list={list} />);
+    const { board } = this.props;
+    const lists = board.lists.map(listId =>
+      <ListContainer key={listId} listId={listId} />
+    );
     return (
       <div style={styles.board}>
-        {children}
+        {lists}
+        <Composer label="Add a list…"
+                  onAdd={this.handleAdd} />
       </div>
     );
   }

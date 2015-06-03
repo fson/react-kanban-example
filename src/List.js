@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
-import Card from './Card';
+import CardContainer from './CardContainer';
 import Composer from './Composer';
 
 const styles = {
@@ -30,13 +30,28 @@ const styles = {
 };
 
 export default class List extends React.Component {
+  static propTypes = {
+    list: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    addCard: PropTypes.func.isRequired,
+  }
+
+  handleAdd = (name) => {
+    this.props.addCard(this.props.list.id, name);
+  }
+
   render() {
-    const {list} = this.props;
+    const { list } = this.props;
+    const children = list.cards.map(cardId =>
+      <CardContainer key={cardId} cardId={cardId} />
+    );
     return (
       <div style={styles.list}>
         <h2 style={styles.listName}>{list.name}</h2>
         <div style={styles.listCards}>
-          {list.cards.map(card => <Card card={card} key={card.name} />)}
+          {children}
           <Composer label="Add a card…"
                     onAdd={this.handleAdd} />
         </div>
